@@ -65,12 +65,90 @@ Display all filtered images using a grid layout for comparison.
 
 ##  Developed By
 
-- **Name:** ____________________________  
-- **Register No:** ______________________  
+- **Name:** Narendhiran P  
+- **Register No:**  212224230177
 
+## Program
+```py
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from google.colab import files
+
+# Upload Image
+uploaded = files.upload()
+
+# Read Image
+img = cv2.imread(list(uploaded.keys())[0])
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# 1. Averaging Filter
+avg = cv2.blur(img, (5, 5))
+
+# 2. Weighted Averaging Filter
+kernel = np.array([[1, 2, 1],
+                   [2, 4, 2],
+                   [1, 2, 1]], dtype=np.float32) / 16
+
+weighted = cv2.filter2D(img, -1, kernel)
+
+# 3. Gaussian Filter
+gaussian = cv2.GaussianBlur(img, (5, 5), 0)
+
+# 4. Median Filter
+median = cv2.medianBlur(img, 5)
+
+# 5. Laplacian Sharpening using Kernel
+lap_kernel = np.array([[0, -1, 0],
+                       [-1, 5, -1],
+                       [0, -1, 0]])
+
+lap_sharp = cv2.filter2D(img, -1, lap_kernel)
+
+# 6. Laplacian Operator
+gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+
+lap = cv2.Laplacian(gray, cv2.CV_64F)
+lap = cv2.convertScaleAbs(lap)
+
+# Display All Results
+images = [img, avg, weighted, gaussian,
+          median, lap_sharp, lap]
+
+titles = ["Original Image",
+          "Averaging Filter",
+          "Weighted Averaging Filter",
+          "Gaussian Filter",
+          "Median Filter",
+          "Laplacian Kernel",
+          "Laplacian Operator"]
+
+plt.figure(figsize=(15, 10))
+
+for i in range(7):
+    plt.subplot(3, 3, i + 1)
+
+    if i == 6:
+        plt.imshow(images[i], cmap='gray')
+    else:
+        plt.imshow(images[i])
+
+    plt.title(titles[i])
+    plt.axis("off")
+
+plt.tight_layout()
+plt.show()
+
+print("Image Smoothing and Sharpening Completed Successfully!")
+
+```
 ---
 
 ##  Output
+
+<img width="946" height="617" alt="image" src="https://github.com/user-attachments/assets/976d0e56-8a27-4f8a-92e2-c0879f7dca52" />
+
 
 ### Smoothing Filters
 
